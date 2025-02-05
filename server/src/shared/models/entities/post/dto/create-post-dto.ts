@@ -5,7 +5,8 @@ import {
 } from '@nestjs/swagger';
 import {
 	IsBase64,
-	IsNotEmpty
+	IsNotEmpty,
+	IsOptional
 } from 'class-validator';
 
 export class CreatePostDto extends GenericEntity {
@@ -21,6 +22,7 @@ export class CreatePostDto extends GenericEntity {
 		description: 'Arquivo da postagem em base64',
 		required: false,
 	})
+	@IsOptional()
 	@IsBase64({}, {message: 'Arquivo da postagem deve ser base64!'})
 	file?: string;
 }

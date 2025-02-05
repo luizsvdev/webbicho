@@ -1,4 +1,7 @@
-import {Injectable} from '@nestjs/common';
+import {
+	Injectable,
+	OnModuleInit
+} from '@nestjs/common';
 import path from 'node:path';
 import fs from 'fs';
 import nodemailer, {Transporter} from 'nodemailer';
@@ -9,13 +12,16 @@ import {pathAssets} from '../../assets/path-assets';
 import {VaultConfig} from '../models/classes/vault-config';
 
 @Injectable()
-export class MailService {
+export class MailService implements OnModuleInit {
 	
 	transporter: Transporter;
 	
 	constructor(
 			private readonly tokenService: TokenService,
 	) {
+	}
+	
+	onModuleInit(): void {
 		this.transporter = nodemailer.createTransport({
 			service: VaultConfig.MAIL.SMTP,
 			port: 465,
@@ -27,7 +33,7 @@ export class MailService {
 		});
 	}
 	
-	public sendVerificationEmail(user: UserRegisterDto): Promise<void> {
+	public sendVerificationEmail(user: UserRegisterDto): Promise<string> {
 		return new Promise(async (resolve, reject): Promise<void> => {
 			const token: string = await this.tokenService.getToken(user, '15m');
 			const URL: string = VaultConfig.APP.FRONTEND_URL;
@@ -43,7 +49,7 @@ export class MailService {
 					return reject({message: `Erro ao enviar o e-mail de verificação: ${err.message}`});
 				} else {
 					console.log('E-mail enviado:', info);
-					return resolve();
+					return resolve(token);
 				}
 			});
 		});

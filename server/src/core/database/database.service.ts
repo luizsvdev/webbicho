@@ -29,10 +29,7 @@ export class DatabaseService implements TypeOrmOptionsFactory {
 			private readonly env: ConfigService,
 			private readonly vault: EnvironmentService
 	) {
-		
 		this.logger = new Logger(this.constructor.name);
-		this.logger.debug('Construindo serviço');
-		
 	}
 	
 	async beforeCreateTypeOrmOptions(): Promise<void> {

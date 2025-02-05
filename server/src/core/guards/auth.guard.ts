@@ -13,14 +13,13 @@ import {
 } from 'express';
 import jwt from 'jsonwebtoken';
 import {HEADER} from '../cors/headers';
-import {ConfigService} from '@nestjs/config';
+import {VaultConfig} from '../../shared/models/classes/vault-config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 	constructor(
 			@InjectRepository(User)
 			private readonly userRepository: Repository<User>,
-			private readonly env: ConfigService,
 	) {
 	}
 	
@@ -31,7 +30,7 @@ export class AuthGuard implements CanActivate {
 		const response: Response = context.switchToHttp().getResponse<Response>();
 		const token: string = request.headers[HEADER.AUTHORIZATION] as string;
 		try {
-			const SECRET: string = this.env.get('JWT_SECRET');
+			const SECRET: string = VaultConfig.APP.JWT_SECRET;
 			response.locals.jwtPayload = jwt.verify(token, SECRET);
 			const userUuid: string = request.params?.id;
 			const user: User = await this.userRepository.findOne({

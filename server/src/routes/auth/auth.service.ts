@@ -17,7 +17,7 @@ import jwt, {JwtPayload} from 'jsonwebtoken';
 import {TokenService} from '../../shared/services/token.service';
 import {UserRegisterDto} from '../../shared/models/entities/user/dto/user-register-dto';
 import {ConfigService} from '@nestjs/config';
-import {EnvKey} from '../../core/env-key.enum';
+import {VaultConfig} from '../../shared/models/classes/vault-config';
 
 @Injectable()
 export class AuthService {
@@ -85,9 +85,11 @@ export class AuthService {
 			throw new ConflictException('Usuário e/ou e-mail já está em uso');
 		}
 		userDto.password = await bcrypt.hash(userDto.password as string, 10);
-		await this.mailService.sendVerificationEmail(userDto);
+		const token: string = await this.mailService.sendVerificationEmail(userDto);
 		await this.userRepository.insert(userDto);
-		return await this.userRepository.findOneByOrFail({username: userDto.username});
+		const user: User = await this.userRepository
+				.findOneByOrFail({username: userDto.username});
+		return {...user, token};
 	}
 	
 	/**
@@ -97,7 +99,7 @@ export class AuthService {
 	 * @throws {ConflictException} - Usuário já verificado ou não encontrado
 	 * */
 	public async verifyAccount(token: string): Promise<string> {
-		const SECRET: string = this.env.get(EnvKey.JWT_SECRET);
+		const SECRET: string = VaultConfig.APP.JWT_SECRET;
 		const payload: string | JwtPayload = jwt.verify(token, SECRET);
 		const userEmail: string = payload.sub as string;
 		const user: User = await this.userRepository.findOne({

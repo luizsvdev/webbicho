@@ -1,8 +1,8 @@
 export enum HEADER {
-	AUTHORIZATION = 'Authorization',
-	USER_ID = 'User-Id',
-	FIELDS = 'Fields',
-	RELATIONS = 'Relations',
-	PARAMS = 'Params',
-	ORDER = 'Order',
+	AUTHORIZATION = 'authorization',
+	USER_ID = 'user-id',
+	FIELDS = 'fields',
+	RELATIONS = 'relations',
+	PARAMS = 'params',
+	ORDER = 'order',
 }
