@@ -8,12 +8,12 @@ import jwt, {
 	JwtPayload,
 	SignOptions
 } from 'jsonwebtoken';
-import {ConfigService} from '@nestjs/config';
+import {VaultConfig} from '../models/classes/vault-config';
 
 @Injectable()
 export class TokenService {
 	
-	constructor(private readonly env: ConfigService) {
+	constructor() {
 	}
 	
 	/**
@@ -36,7 +36,7 @@ export class TokenService {
 			subject: user.email,
 			expiresIn: expiration,
 		};
-		const SECRET: string = this.env.get('JWT_SECRET');
+		const SECRET: string = VaultConfig.APP.JWT_SECRET;
 		return jwt.sign(payload, SECRET, options);
 	}
 	
@@ -47,7 +47,7 @@ export class TokenService {
 	 * @return {Promise<object>} - O payload do token
 	 * */
 	public async authenticateToken(token: string): Promise<object> {
-		const SECRET: string = this.env.get('JWT_SECRET');
+		const SECRET: string = VaultConfig.APP.JWT_SECRET;
 		const decoded: JwtPayload = jwt.verify(token, SECRET) as JwtPayload;
 		const expirationDate: Date = new Date((decoded?.exp as number) * 1000);
 		const formattedExpirationDate: string = new Intl.DateTimeFormat('pt-BR', {

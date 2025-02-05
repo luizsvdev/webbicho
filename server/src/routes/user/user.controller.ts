@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	DefaultValuePipe,
 	Headers,
 	MethodNotAllowedException,
 	Param,
@@ -62,8 +63,8 @@ export class UserController
 	
 	@ApiListOperation()
 	public async list(
-			@Param(PATH.PAGE, ParseIntPipe) page: number = 1,
-			@Param(PATH.SIZE, ParseIntPipe) size: number = 9,
+			@Param(PATH.PAGE, new DefaultValuePipe(1), ParseIntPipe) page: number,
+			@Param(PATH.SIZE, new DefaultValuePipe(9), ParseIntPipe) size: number,
 			@Headers(HEADER.FIELDS) fields?: string[],
 			@Headers(HEADER.RELATIONS) relations?: string[],
 			@Headers(HEADER.PARAMS) params?: WhereParam<User>[],

@@ -29,8 +29,7 @@ import {
 import {UserRegisterDto} from '../../shared/models/entities/user/dto/user-register-dto';
 import {UserLoginDto} from '../../shared/models/entities/user/dto/user-login-dto';
 import {HEADER} from '../../core/cors/headers';
-import {ConfigService} from '@nestjs/config';
-import {EnvKey} from '../../core/env-key.enum';
+import {VaultConfig} from '../../shared/models/classes/vault-config';
 
 @Controller('auth')
 @ApiTags('Autenticação', 'Authentication')
@@ -38,7 +37,6 @@ export class AuthController {
 	constructor(
 			private readonly authService: AuthService,
 			private readonly tokenService: TokenService,
-			private readonly env: ConfigService,
 	) {
 	}
 	
@@ -78,7 +76,7 @@ export class AuthController {
 	public async verifyAccount(
 			@Query('token') token: string,
 	): Promise<object> {
-		const frontendURL: string = this.env.get<string>(EnvKey.APP_FRONTEND_URL);
+		const frontendURL: string = VaultConfig.APP.FRONTEND_URL;
 		try {
 			const newToken: string = await this.authService.verifyAccount(token);
 			return {
@@ -102,11 +100,11 @@ export class AuthController {
 	@Get()
 	@UseGuards(AuthGuard)
 	@ApiOperation({summary: 'Autentica o token de um usuário'})
-	@ApiHeader({name: HEADER.AUTH, description: 'Token de autenticação'})
+	@ApiHeader({name: HEADER.AUTHORIZATION, description: 'Token de autenticação'})
 	@ApiOkResponse({description: 'Token autenticado com sucesso'})
 	@ApiUnauthorizedResponse({description: 'Access denied'})
 	public async authenticateToken(
-			@Headers(HEADER.AUTH) token: string,
+			@Headers(HEADER.AUTHORIZATION) token: string,
 	): Promise<object> {
 		try {
 			return this.tokenService.authenticateToken(token);

@@ -10,13 +10,13 @@ import {
 	SwaggerModule
 } from '@nestjs/swagger';
 import {HEADER} from './core/cors/headers';
-import {ConfigService} from '@nestjs/config';
 import {NestExpressApplication} from '@nestjs/platform-express';
-import {EnvKey} from './core/env-key.enum';
 import {pathAssets} from './assets/path-assets';
+import {VaultConfig} from './shared/models/classes/vault-config';
 
-async function bootstrap(): Promise<ConfigService> {
+async function bootstrap(): Promise<void> {
 	const app: NestExpressApplication = await NestFactory.create<NestExpressApplication>(AppModule);
+	
 	app.useGlobalPipes(new ValidationPipe({whitelist: true}));
 	app.enableCors({
 		origin: '*',
@@ -26,17 +26,17 @@ async function bootstrap(): Promise<ConfigService> {
 	
 	app.setBaseViewsDir(pathAssets.views);
 	app.setViewEngine('hbs');
-	app.useStaticAssets(pathAssets.logos, {prefix: '/logos/'});
+	app.useStaticAssets(pathAssets.logos, {prefix: '/images/'});
 	
 	const config: Omit<OpenAPIObject, 'paths'> = new DocumentBuilder()
-			.setTitle('API WebBicho')
-			.setDescription('Rotas disponíveis para a API WebBicho.')
+			.setTitle('WebBicho API')
+			.setDescription('Available routes for the WebBicho API')
 			.setVersion('1.0')
-			.addSecurity('Token JWT', {
+			.addSecurity('JWT Token', {
 				type: 'apiKey',
-				name: 'auth',
+				name: HEADER.AUTHORIZATION,
 				in: 'header',
-				description: 'Seu Token JWT gerado no login',
+				description: 'Your JWT token generated at the login route',
 			})
 			.build();
 	const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
@@ -44,15 +44,10 @@ async function bootstrap(): Promise<ConfigService> {
 		jsonDocumentUrl: 'swagger/json',
 	});
 	
-	const env: ConfigService = app.get(ConfigService);
-	const PORT: number = env.get<number>(EnvKey.APP_PORT);
-	await app.listen(PORT);
-	return env;
+	await app.listen(VaultConfig.APP.PORT);
 }
 
-bootstrap().then((env: ConfigService): void => {
-	const PORT: number = env.get<number>(EnvKey.APP_PORT);
-	const HOST: string = env.get<string>(EnvKey.APP_HOST);
+bootstrap().then((): void => {
 	new Logger('NestApplication')
-			.log(`NestJS server running at ${HOST}`);
+			.log(`NestJS server running at ${VaultConfig.APP.PORT}`);
 });

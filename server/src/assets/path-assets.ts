@@ -7,7 +7,7 @@ interface PathAssets {
 }
 
 export const pathAssets: PathAssets = {
-	logos: path.join(__dirname, 'logos'),
+	logos: path.join(__dirname, 'images/logos'),
 	html: path.join(__dirname, 'html'),
 	views: path.join(__dirname, 'views'),
 };

@@ -46,8 +46,8 @@ export abstract class GenericController<
 	}
 	
 	public async list(
-			page: number = 1,
-			size: number = 9,
+			page: number,
+			size: number,
 			fields?: string[],
 			relations?: string[],
 			params?: WhereParam<T>[],
