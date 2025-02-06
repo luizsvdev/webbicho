@@ -1,4 +1,7 @@
-import {NestFactory} from '@nestjs/core';
+import {
+	NestApplication,
+	NestFactory
+} from '@nestjs/core';
 import {AppModule} from './app.module';
 import {
 	Logger,
@@ -56,6 +59,6 @@ async function bootstrap(): Promise<void> {
 }
 
 bootstrap().then((): void => {
-	const logger: Logger = new Logger('NestApplication');
+	const logger: Logger = new Logger(NestApplication.name);
 	logger.log(`NestJS server running at ${VaultConfig.APP.PORT}`);
 });
