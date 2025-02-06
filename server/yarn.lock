@@ -1567,6 +1567,11 @@
   resolved "https://registry.yarnpkg.com/@inquirer/type/-/type-3.0.4.tgz#fa5f9e91a0abf3c9e93d3e1990ecb891d8195cf2"
   integrity sha512-2MNFrDY8jkFYc9Il9DgLsHhMzuHnOYM1+CUYVWbzu9oT0hC7V7EcYvdCKeoll/Fcci04A+ERZ9wcc7cQ8lTkIA==
 
+"@intelika/swagger-theme@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@intelika/swagger-theme/-/swagger-theme-1.0.4.tgz#ade6701118f9539dd7d9b3b4af448bf718468b19"
+  integrity sha512-0+fqmrBGwU7Q/M6xODxRy9ooy7EzMiN+Ca3+aKS0/Xr/OiZi+AkyNDaqtO6mBhLEyWOzyfsw1tNXETVfLnfDfA==
+
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@isaacs/cliui/-/cliui-8.0.2.tgz#b37667b7bc181c168782259bab42474fbf52b550"

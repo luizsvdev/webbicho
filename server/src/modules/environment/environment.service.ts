@@ -25,7 +25,7 @@ export class EnvironmentService {
 				config: {
 					token: VAULT_TOKEN
 				}
-			}
+			},
 		});
 	}
 	
