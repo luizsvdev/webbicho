@@ -1,24 +1,26 @@
-import {GenericEntity} from '../generic-entity';
+import {WbEntity} from '../wb-entity';
 import {
-	Column, Entity, ManyToOne
+	Column,
+	Entity,
+	ManyToOne
 } from 'typeorm';
 import {User} from '../user/user';
 import {Post} from '../post/post';
 
 @Entity()
-export class Comment extends GenericEntity {
-	@Column({length: 1000})
-  content: string;
-  
+export class Comment extends WbEntity {
+	@Column({type: 'text'})
+	content: string;
+	
 	@ManyToOne(
 			() => User,
 			user => user.comments,
 	)
-  user: User;
-  
+	user: User;
+	
 	@ManyToOne(
 			() => Post,
 			post => post.comments,
 	)
-  post: Post;
+	post: Post;
 }

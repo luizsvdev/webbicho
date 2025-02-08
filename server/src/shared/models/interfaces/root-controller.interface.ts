@@ -1,4 +1,4 @@
-import {GenericEntity} from '../entities/generic-entity';
+import {WbEntity} from '../entities/wb-entity';
 import {WhereParam} from '../types/where-param';
 import {
 	DeepPartial,
@@ -6,7 +6,7 @@ import {
 } from 'typeorm';
 import {Page} from '../classes/page';
 
-export interface EntityController<T extends GenericEntity> {
+export interface RootController<T extends WbEntity> {
 	findOne(
 		id?: string,
 		fields?: string[],

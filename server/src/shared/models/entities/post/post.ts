@@ -1,24 +1,27 @@
-import {GenericEntity} from '../generic-entity';
+import {WbEntity} from '../wb-entity';
 import {
-	Column, Entity, ManyToOne, OneToMany
+	Column,
+	Entity,
+	ManyToOne,
+	OneToMany
 } from 'typeorm';
 import {User} from '../user/user';
 import {Comment} from '../comment/comment';
 
 @Entity()
-export class Post extends GenericEntity {
+export class Post extends WbEntity {
 	@Column({type: 'text'})
-  content: string;
-  
+	content: string;
+	
 	@Column({type: 'text', nullable: true})
-  file: string;
-  
+	file: string;
+	
 	@ManyToOne(
 			() => User,
 			user => user.posts,
 	)
-  user: User;
-  
+	user: User;
+	
 	@OneToMany(
 			() => Comment,
 			comment => comment.post,
@@ -27,5 +30,5 @@ export class Post extends GenericEntity {
 				cascade: true,
 			}
 	)
-  comments: Comment[];
+	comments: Comment[];
 }

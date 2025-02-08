@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {GenericService} from '../generic.service';
+import {WbService} from '../wb.service';
 import {Post} from '../../shared/models/entities/post/post';
 import {Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
@@ -8,12 +8,12 @@ import {CreatePostDto} from '../../shared/models/entities/post/dto/create-post-d
 import {UpdatePostDto} from '../../shared/models/entities/post/dto/update-post-dto';
 
 @Injectable()
-export class PostService extends GenericService<Post, CreatePostDto, UpdatePostDto> {
+export class PostService extends WbService<Post, CreatePostDto, UpdatePostDto> {
 	constructor(
-      @InjectRepository(Post)
-      public readonly repository: Repository<Post>,
-      @InjectRepository(User)
-      public readonly userRepository: Repository<User>
+			@InjectRepository(Post)
+			public readonly repository: Repository<Post>,
+			@InjectRepository(User)
+			public readonly userRepository: Repository<User>
 	) {
 		super(repository, userRepository);
 	}

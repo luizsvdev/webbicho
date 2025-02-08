@@ -2,25 +2,25 @@ import {
 	Test,
 	TestingModule
 } from '@nestjs/testing';
-import {GenericService} from './generic.service';
-import {GenericEntity} from '../shared/models/entities/generic-entity';
+import {WbService} from './wb.service';
+import {WbEntity} from '../shared/models/entities/wb-entity';
 
 describe('GenericService', (): void => {
-	let service: GenericService<GenericEntity>;
-  
+	let service: WbService<WbEntity>;
+	
 	beforeEach(async (): Promise<void> => {
 		const module: TestingModule = await Test.createTestingModule({
 			providers: [
 				{
-					provide: GenericService,
-					useClass: GenericEntity,
+					provide: WbService,
+					useClass: WbEntity,
 				},
 			],
 		}).compile();
-    
-		service = module.get<GenericService<GenericEntity>>(GenericService);
+		
+		service = module.get<WbService<WbEntity>>(WbService);
 	});
-  
+	
 	it('should be defined', (): void => {
 		expect(service).toBeDefined();
 	});

@@ -1,6 +1,6 @@
 export enum HEADER {
 	AUTHORIZATION = 'authorization',
-	USER_ID = 'user-id',
+	USER_UUID = 'user-uuid',
 	FIELDS = 'fields',
 	RELATIONS = 'relations',
 	PARAMS = 'params',

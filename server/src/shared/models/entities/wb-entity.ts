@@ -5,9 +5,8 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from 'typeorm';
-import {ApiHideProperty} from '@nestjs/swagger';
 
-export abstract class GenericEntity {
+export abstract class WbEntity {
 	@PrimaryGeneratedColumn('uuid')
 	uuid?: string;
 	
@@ -21,7 +20,6 @@ export abstract class GenericEntity {
 		type: 'uuid',
 		nullable: true,
 	})
-	@ApiHideProperty()
 	updatedBy?: string;
 	
 	@CreateDateColumn()
