@@ -13,6 +13,7 @@ import {
 import {WhereParam} from '../models/types/where-param';
 
 export function convertParams<T>(params: WhereParam<T>[]): FindOptionsWhere<T>[] {
+	if (!params) return undefined;
 	return params?.map(param => {
 		const newParam: FindOptionsWhere<T> = {};
 		for (const field in param) {

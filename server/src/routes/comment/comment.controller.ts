@@ -1,7 +1,6 @@
 import {
 	Body,
 	Controller,
-	DefaultValuePipe,
 	Headers,
 	Param,
 	ParseIntPipe,
@@ -61,8 +60,8 @@ export class CommentController
 	
 	@ApiListOperation()
 	public async list(
-			@Param(PATH.PAGE, new DefaultValuePipe(1), ParseIntPipe) page: number,
-			@Param(PATH.SIZE, new DefaultValuePipe(9), ParseIntPipe) size: number,
+			@Param(PATH.PAGE, ParseIntPipe) page: number,
+			@Param(PATH.SIZE, ParseIntPipe) size: number,
 			@Headers(HEADER.FIELDS) fields?: string[],
 			@Headers(HEADER.RELATIONS) relations?: string[],
 			@Headers(HEADER.PARAMS) params?: WhereParam<Comment>[],

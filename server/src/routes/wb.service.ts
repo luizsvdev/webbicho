@@ -58,11 +58,8 @@ export abstract class WbService<
 					'Nenhum parâmetro informado',
 			);
 		}
-		const where: FindOptionsWhere<T>[] = params
-			? convertParams(params).map(p => ({
-				...p, uuid: entityId,
-			}))
-			: undefined;
+		const where: FindOptionsWhere<T>[] = convertParams(params)
+				.map(p => ({...p, uuid: entityId}));
 		const options: FindOneOptions = {
 			select: fields,
 			relations: relations,
@@ -91,8 +88,8 @@ export abstract class WbService<
 		const options: FindManyOptions = {
 			select: fields,
 			relations: relations,
-			where: params ? convertParams(params) : undefined,
-			skip: (page - 1) * size,
+			where: convertParams(params),
+			skip: page * size,
 			take: size,
 			order: order,
 		};
@@ -107,14 +104,15 @@ export abstract class WbService<
 	
 	/**
 	 * @description Cria uma nova entidade do tipo T no repositório.
-	 * @param entity - entidade parcial a ser criada.
+	 * @param createEntityDto - entidade a ser criada.
 	 * @param userUuid - id do usuário que está criando a entidade.
 	 * @returns a entidade criada.*/
 	public async create(
-			entity: CT,
+			createEntityDto: CT,
 			userUuid: string,
 	): Promise<T> {
-		await this.beforeCreate(entity as never as T, userUuid);
+		const entity: T = createEntityDto as never as T;
+		await this.beforeCreate(entity, userUuid);
 		
 		const queryRunner: QueryRunner = this.repository.manager.connection.createQueryRunner();
 		await queryRunner.startTransaction();
@@ -123,7 +121,7 @@ export abstract class WbService<
 					entity as QueryDeepPartialEntity<T>,
 			);
 			await queryRunner.commitTransaction();
-			const uuid: string = result.identifiers.find(i => i?.uuid).uuid as string;
+			const uuid: string = result.identifiers?.[0]?.uuid as string;
 			return await this.repository.findOneByOrFail(
 					{uuid} as FindOptionsWhere<T>,
 			);
@@ -138,16 +136,17 @@ export abstract class WbService<
 	/**
 	 * @description Atualiza uma entidade no repositório pelo uuid.
 	 * @param entityId - id da entidade a ser atualizada.
-	 * @param entity - entidade parcial com novas alterações.
+	 * @param entityDto - entidade parcial com novas alterações.
 	 * @param userUuid - id do usuário que está atualizando a entidade.
 	 * @returns a entidade atualizada.
 	 * @throws NotFoundException se a entidade não for encontrada.*/
 	public async update(
 			entityId: string,
-			entity: UT,
+			entityDto: UT,
 			userUuid: string,
 	): Promise<T> {
-		await this.beforeUpdate(entityId, entity as never as T, userUuid);
+		const entity: T = entityDto as never as T;
+		await this.beforeUpdate(entityId, entity, userUuid);
 		const exists: boolean = await this.repository.existsBy(
 				{uuid: entityId} as FindOptionsWhere<T>,
 		);
