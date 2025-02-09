@@ -5,8 +5,8 @@ import {
 	ConfigService
 } from '@nestjs/config';
 import {DatabaseService} from './database.service';
-import {EnvironmentModule} from '../../modules/environment/environment.module';
-import {EnvironmentService} from '../../modules/environment/environment.service';
+import {EnvironmentModule} from '../environment/environment.module';
+import {EnvironmentService} from '../environment/environment.service';
 
 @Module({
 	imports: [

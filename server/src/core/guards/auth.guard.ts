@@ -37,7 +37,7 @@ export class AuthGuard implements CanActivate {
 				select: ['uuid'],
 				where: {uuid: userUuid},
 			});
-			request.headers[HEADER.USER_ID] = user.uuid;
+			request.headers[HEADER.USER_UUID] = user.uuid;
 			return true;
 		} catch (error) {
 			throw new ForbiddenException('Não foi possível autorizar a requisição.');

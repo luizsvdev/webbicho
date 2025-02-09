@@ -1,13 +1,12 @@
 import {
 	Body,
 	Controller,
-	DefaultValuePipe,
 	Headers,
 	Param,
 	ParseIntPipe,
 	UseGuards
 } from '@nestjs/common';
-import {GenericController} from '../generic.controller';
+import {WbController} from '../wb.controller';
 import {Comment} from '../../shared/models/entities/comment/comment';
 import {CommentService} from './comment.service';
 import {CheckJwtGuard} from '../../core/guards/check-jwt.guard';
@@ -29,21 +28,21 @@ import {
 	FindOptionsOrder
 } from 'typeorm';
 import {Page} from '../../shared/models/classes/page';
-import {EntityController} from '../../shared/models/interfaces/entity-controller.interface';
+import {RootController} from '../../shared/models/interfaces/root-controller.interface';
 import {UpdateCommentDto} from '../../shared/models/entities/comment/dto/update-comment-dto';
 import {CreateCommentDto} from '../../shared/models/entities/comment/dto/create-comment-dto';
 import {PARAM} from '../../core/cors/params';
 
 @Controller('comment')
 @UseGuards(CheckJwtGuard)
-@ApiTags('Comentários')
+@ApiTags('Comments')
 export class CommentController
-	extends GenericController<
+	extends WbController<
 		Comment,
 		CommentService,
 		CreateCommentDto,
 		UpdateCommentDto
-	> implements EntityController<Comment> {
+	> implements RootController<Comment> {
 	
 	constructor(service: CommentService) {
 		super(service);
@@ -61,8 +60,8 @@ export class CommentController
 	
 	@ApiListOperation()
 	public async list(
-			@Param(PATH.PAGE, new DefaultValuePipe(1), ParseIntPipe) page: number,
-			@Param(PATH.SIZE, new DefaultValuePipe(9), ParseIntPipe) size: number,
+			@Param(PATH.PAGE, ParseIntPipe) page: number,
+			@Param(PATH.SIZE, ParseIntPipe) size: number,
 			@Headers(HEADER.FIELDS) fields?: string[],
 			@Headers(HEADER.RELATIONS) relations?: string[],
 			@Headers(HEADER.PARAMS) params?: WhereParam<Comment>[],
@@ -74,7 +73,7 @@ export class CommentController
 	@ApiCreateOperation()
 	public async create(
 			@Body() entity: CreateCommentDto,
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 	): Promise<Comment> {
 		return super.create(entity, userUuid);
 	}
@@ -82,7 +81,7 @@ export class CommentController
 	@ApiUpdateOperation()
 	public async update(
 			@Param(PARAM.UUID, ParseIntPipe) uuid: string,
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 			@Body() entity: UpdateCommentDto,
 	): Promise<Comment> {
 		return super.update(uuid, userUuid, entity);
@@ -100,14 +99,14 @@ export class CommentController
 	@ApiDeleteOperation()
 	public async delete(
 			@Param(PARAM.UUID, ParseIntPipe) uuid: string,
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 	): Promise<void> {
 		return super.delete(uuid, userUuid);
 	}
 	
 	@ApiBulkDeleteOperation()
 	async bulkDelete(
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 			@Headers(HEADER.PARAMS) params: WhereParam<Comment>[],
 	): Promise<void> {
 		return super.bulkDelete(userUuid, params);

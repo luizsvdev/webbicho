@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {GenericService} from '../generic.service';
+import {WbService} from '../wb.service';
 import {Comment} from '../../shared/models/entities/comment/comment';
 import {Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
@@ -8,7 +8,7 @@ import {CreateCommentDto} from '../../shared/models/entities/comment/dto/create-
 import {UpdateCommentDto} from '../../shared/models/entities/comment/dto/update-comment-dto';
 
 @Injectable()
-export class CommentService extends GenericService<Comment, CreateCommentDto, UpdateCommentDto> {
+export class CommentService extends WbService<Comment, CreateCommentDto, UpdateCommentDto> {
 	constructor(
 			@InjectRepository(Comment)
 			public readonly repository: Repository<Comment>,

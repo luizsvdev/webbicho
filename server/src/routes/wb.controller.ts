@@ -5,9 +5,9 @@ import {
 	InternalServerErrorException,
 	UseGuards
 } from '@nestjs/common';
-import {GenericEntity} from '../shared/models/entities/generic-entity';
+import {WbEntity} from '../shared/models/entities/wb-entity';
 import {Page} from '../shared/models/classes/page';
-import {GenericService} from './generic.service';
+import {WbService} from './wb.service';
 import {
 	DeepPartial,
 	FindOptionsOrder
@@ -18,11 +18,11 @@ import {HEADER} from '../core/cors/headers';
 
 
 @UseGuards(CheckJwtGuard)
-export abstract class GenericController<
-	T extends GenericEntity,
-	S extends GenericService<T, CT, UT>,
-	CT extends GenericEntity,
-	UT extends GenericEntity,
+export abstract class WbController<
+	T extends WbEntity,
+	S extends WbService<T, CT, UT>,
+	CT,
+	UT,
 > {
 	protected constructor(
 			private readonly service: S,
@@ -94,7 +94,7 @@ export abstract class GenericController<
 	
 	public async bulkUpdate(
 			@Body() entity: DeepPartial<T>,
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 			@Headers(HEADER.PARAMS) params: WhereParam<T>[],
 	): Promise<void> {
 		try {
@@ -124,7 +124,7 @@ export abstract class GenericController<
 	
 	
 	public async bulkDelete(
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 			@Headers(HEADER.PARAMS) params: WhereParam<T>[],
 	): Promise<void> {
 		try {

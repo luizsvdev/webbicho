@@ -1,4 +1,4 @@
-import {GenericEntity} from '../generic-entity';
+import {WbEntity} from '../wb-entity';
 import {
 	Column,
 	Entity,
@@ -21,47 +21,47 @@ export enum EUserVerification {
 }
 
 @Entity()
-export class User extends GenericEntity {
+export class User extends WbEntity {
 	@Column({unique: true, length: 50})
 	@ApiPropertyOptional({readOnly: true})
-  username?: string;
-  
+	username?: string;
+	
 	@Column({nullable: true, length: 255})
 	@ApiPropertyOptional()
-  name: string;
-  
+	name: string;
+	
 	@Column({unique: true, length: 255})
 	@ApiPropertyOptional({readOnly: true})
-  email?: string;
-  
+	email?: string;
+	
 	@Column({select: false, length: 60})
 	@ApiPropertyOptional({readOnly: true})
-  password?: string;
-  
+	password?: string;
+	
 	@Column({nullable: true, length: 400})
 	@ApiPropertyOptional()
-  about: string;
-  
+	about: string;
+	
 	@Column({
 		type: 'enum',
 		enum: EUserRole,
 		default: EUserRole.USER,
 	})
 	@ApiPropertyOptional({readOnly: true})
-  role?: EUserRole;
-  
+	role?: EUserRole;
+	
 	@Column({type: 'text', nullable: true})
 	@ApiPropertyOptional()
-  avatar: string;
-  
+	avatar: string;
+	
 	@Column({
 		type: 'enum',
 		enum: EUserVerification,
 		default: EUserVerification.NON_VERIFIED,
 	})
 	@ApiPropertyOptional({readOnly: true})
-  verified?: EUserVerification;
-  
+	verified?: EUserVerification;
+	
 	@OneToMany(
 			() => Post,
 			post => post.user,
@@ -71,8 +71,8 @@ export class User extends GenericEntity {
 			}
 	)
 	@ApiPropertyOptional({readOnly: true})
-  posts?: Post[];
-  
+	posts?: Post[];
+	
 	@OneToMany(
 			() => Comment,
 			comment => comment.user,
@@ -82,8 +82,8 @@ export class User extends GenericEntity {
 			}
 	)
 	@ApiPropertyOptional({readOnly: true})
-  comments?: Comment[];
-  
+	comments?: Comment[];
+	
 	@ApiPropertyOptional({readOnly: true})
-  token?: string;
+	token?: string;
 }

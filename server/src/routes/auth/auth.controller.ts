@@ -32,7 +32,7 @@ import {HEADER} from '../../core/cors/headers';
 import {VaultConfig} from '../../shared/models/classes/vault-config';
 
 @Controller('auth')
-@ApiTags('Autenticação', 'Authentication')
+@ApiTags('Authentication')
 export class AuthController {
 	constructor(
 			private readonly authService: AuthService,

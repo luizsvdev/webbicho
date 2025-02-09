@@ -36,7 +36,7 @@ export class CheckJwtGuard implements CanActivate {
 				select: ['uuid'],
 				where: {email: decoded.sub as string},
 			});
-			request.headers[HEADER.USER_ID] = user.uuid.toString();
+			request.headers[HEADER.USER_UUID] = user.uuid.toString();
 			return true;
 		} catch (error) {
 			throw new ForbiddenException('Não foi possível autorizar a requisição.');

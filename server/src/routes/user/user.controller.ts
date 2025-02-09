@@ -1,7 +1,6 @@
 import {
 	Body,
 	Controller,
-	DefaultValuePipe,
 	Headers,
 	MethodNotAllowedException,
 	Param,
@@ -11,7 +10,7 @@ import {
 	Put,
 	UseGuards,
 } from '@nestjs/common';
-import {GenericController} from '../generic.controller';
+import {WbController} from '../wb.controller';
 import {UserService} from './user.service';
 import {
 	ApiExcludeEndpoint,
@@ -19,8 +18,7 @@ import {
 } from '@nestjs/swagger';
 import {CheckJwtGuard} from '../../core/guards/check-jwt.guard';
 import {UpdateUserDto} from '../../shared/models/entities/user/dto/update-user-dto';
-import {CreateUserDto} from '../../shared/models/entities/user/dto/create-user-dto';
-import {EntityController} from '../../shared/models/interfaces/entity-controller.interface';
+import {RootController} from '../../shared/models/interfaces/root-controller.interface';
 import {
 	ApiBulkDeleteOperation,
 	ApiDeleteOperation,
@@ -38,14 +36,14 @@ import {PARAM} from '../../core/cors/params';
 
 @Controller('user')
 @UseGuards(CheckJwtGuard)
-@ApiTags('Usuários')
+@ApiTags('Users')
 export class UserController
-	extends GenericController<
+	extends WbController<
 		User,
 		UserService,
-		CreateUserDto,
+		void,
 		UpdateUserDto
-	> implements EntityController<User> {
+	> implements RootController<User> {
 	
 	constructor(service: UserService) {
 		super(service);
@@ -63,8 +61,8 @@ export class UserController
 	
 	@ApiListOperation()
 	public async list(
-			@Param(PATH.PAGE, new DefaultValuePipe(1), ParseIntPipe) page: number,
-			@Param(PATH.SIZE, new DefaultValuePipe(9), ParseIntPipe) size: number,
+			@Param(PATH.PAGE, ParseIntPipe) page: number,
+			@Param(PATH.SIZE, ParseIntPipe) size: number,
 			@Headers(HEADER.FIELDS) fields?: string[],
 			@Headers(HEADER.RELATIONS) relations?: string[],
 			@Headers(HEADER.PARAMS) params?: WhereParam<User>[],
@@ -73,13 +71,13 @@ export class UserController
 		return super.list(page, size, fields, relations, params, order);
 	}
 	
-	@Post()
+	@Post('create')
 	@ApiExcludeEndpoint()
 	override async create(): Promise<User> {
 		throw new MethodNotAllowedException();
 	}
 	
-	@Put('bulk')
+	@Put('bulk/update')
 	@ApiExcludeEndpoint()
 	public async bulkUpdate(): Promise<void> {
 		throw new MethodNotAllowedException();
@@ -88,7 +86,7 @@ export class UserController
 	@ApiUpdateOperation()
 	public async update(
 			@Param(PARAM.UUID, ParseUUIDPipe) uuid: string,
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 			@Body() entity: UpdateUserDto,
 	): Promise<User> {
 		return super.update(uuid, userUuid, entity);
@@ -97,14 +95,14 @@ export class UserController
 	@ApiDeleteOperation()
 	public async delete(
 			@Param(PARAM.UUID, ParseUUIDPipe) uuid: string,
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 	): Promise<void> {
 		return super.delete(uuid, userUuid);
 	}
 	
 	@ApiBulkDeleteOperation()
 	async bulkDelete(
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 			@Headers(HEADER.PARAMS) params: WhereParam<User>[],
 	): Promise<void> {
 		return super.bulkDelete(userUuid, params);

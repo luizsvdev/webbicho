@@ -1,4 +1,3 @@
-import {GenericEntity} from '../../generic-entity';
 import {
 	ApiProperty,
 	ApiPropertyOptional
@@ -9,7 +8,7 @@ import {
 	IsOptional
 } from 'class-validator';
 
-export class CreatePostDto extends GenericEntity {
+export class CreatePostDto {
 	@ApiProperty({
 		type: String,
 		description: 'Conteúdo da postagem',

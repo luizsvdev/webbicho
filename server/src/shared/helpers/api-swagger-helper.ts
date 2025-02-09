@@ -47,7 +47,7 @@ export function ApiCreateOperation(): MethodDecorator {
 	return applyDecorators(
 			Post('create'),
 			ApiOperation({summary: 'Cria uma entidade'}),
-			ApiHeader({name: HEADER.USER_ID, description: 'Id do usuário'}),
+			ApiHeader({name: HEADER.USER_UUID, description: 'Id do usuário'}),
 			ApiInternalServerErrorResponse({description: 'Erro ao criar entidade'}),
 	);
 }
@@ -57,7 +57,7 @@ export function ApiUpdateOperation(): MethodDecorator {
 			Put('update/:id'),
 			ApiOperation({summary: 'Atualiza uma entidade via id'}),
 			ApiParam({name: 'id', description: 'Id da entidade'}),
-			ApiHeader({name: HEADER.USER_ID, description: 'Id do usuário'}),
+			ApiHeader({name: HEADER.USER_UUID, description: 'Id do usuário'}),
 	);
 }
 
@@ -65,7 +65,7 @@ export function ApiBulkUpdateOperation(): MethodDecorator {
 	return applyDecorators(
 			Put('bulk/update'),
 			ApiOperation({summary: 'Atualiza várias entidades via parâmetros'}),
-			ApiHeader({name: HEADER.USER_ID, description: 'Id do usuário'}),
+			ApiHeader({name: HEADER.USER_UUID, description: 'Id do usuário'}),
 			ApiHeader({
 				name: HEADER.PARAMS, description: 'Parâmetros da busca',
 				schema: {
@@ -83,7 +83,7 @@ export function ApiDeleteOperation(): MethodDecorator {
 			Delete('delete/:id'),
 			ApiOperation({summary: 'Deleta uma entidade via id'}),
 			ApiParam({name: 'id', description: 'Id da entidade'}),
-			ApiHeader({name: HEADER.USER_ID, description: 'Id do usuário'}),
+			ApiHeader({name: HEADER.USER_UUID, description: 'Id do usuário'}),
 	);
 }
 
@@ -91,7 +91,7 @@ export function ApiBulkDeleteOperation(): MethodDecorator {
 	return applyDecorators(
 			Delete('bulk/delete'),
 			ApiOperation({summary: 'Deleta várias entidades via parâmetros'}),
-			ApiHeader({name: HEADER.USER_ID, description: 'Id do usuário'}),
+			ApiHeader({name: HEADER.USER_UUID, description: 'Id do usuário'}),
 			ApiHeader({name: HEADER.PARAMS, description: 'Parâmetros da busca'}),
 	);
 }
@@ -107,7 +107,7 @@ export class ParamsHeaderDto<T> {
 			},
 		},
 	})
-  params: WhereParam<T>[];
+	params: WhereParam<T>[];
 }
 
 

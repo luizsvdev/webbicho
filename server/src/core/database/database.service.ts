@@ -14,7 +14,7 @@ import {
 } from '@nestjs/typeorm';
 import {TypeORMLogger} from './typeorm-logger';
 import {SnakeNamingStrategy} from 'typeorm-naming-strategies';
-import {EnvironmentService} from '../../modules/environment/environment.service';
+import {EnvironmentService} from '../environment/environment.service';
 import {VaultConfig} from '../../shared/models/classes/vault-config';
 
 @Injectable()

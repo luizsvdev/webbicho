@@ -1,14 +1,13 @@
 import {
 	Body,
 	Controller,
-	DefaultValuePipe,
 	Headers,
 	Param,
 	ParseIntPipe,
 	ParseUUIDPipe,
 	UseGuards
 } from '@nestjs/common';
-import {GenericController} from '../generic.controller';
+import {WbController} from '../wb.controller';
 import {Post} from '../../shared/models/entities/post/post';
 import {PostService} from './post.service';
 import {CheckJwtGuard} from '../../core/guards/check-jwt.guard';
@@ -32,19 +31,20 @@ import {Page} from '../../shared/models/classes/page';
 import {PATH} from '../../core/cors/paths';
 import {CreatePostDto} from '../../shared/models/entities/post/dto/create-post-dto';
 import {UpdatePostDto} from '../../shared/models/entities/post/dto/update-post-dto';
-import {EntityController} from '../../shared/models/interfaces/entity-controller.interface';
+import {RootController} from '../../shared/models/interfaces/root-controller.interface';
 import {PARAM} from '../../core/cors/params';
 
 @Controller('post')
 @UseGuards(CheckJwtGuard)
-@ApiTags('Postagens')
+@ApiTags('Posts')
 export class PostController
-	extends GenericController<
+	extends WbController<
 		Post,
 		PostService,
 		CreatePostDto,
 		UpdatePostDto
-	> implements EntityController<Post> {
+	>
+	implements RootController<Post> {
 	
 	constructor(service: PostService) {
 		super(service);
@@ -62,8 +62,8 @@ export class PostController
 	
 	@ApiListOperation()
 	public async list(
-			@Param(PATH.PAGE, new DefaultValuePipe(1), ParseIntPipe) page: number,
-			@Param(PATH.SIZE, new DefaultValuePipe(9), ParseIntPipe) size: number,
+			@Param(PATH.PAGE, ParseIntPipe) page: number,
+			@Param(PATH.SIZE, ParseIntPipe) size: number,
 			@Headers(HEADER.FIELDS) fields?: string[],
 			@Headers(HEADER.RELATIONS) relations?: string[],
 			@Headers(HEADER.PARAMS) params?: WhereParam<Post>[],
@@ -75,14 +75,14 @@ export class PostController
 	@ApiCreateOperation()
 	public async create(
 			@Body() entity: CreatePostDto,
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 	): Promise<Post> {
 		return super.create(entity, userUuid);
 	}
 	
 	@ApiUpdateOperation()
 	public async update(
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 			@Param(PARAM.UUID, ParseUUIDPipe) uuid: string,
 			@Body() entity: UpdatePostDto,
 	): Promise<Post> {
@@ -101,14 +101,14 @@ export class PostController
 	@ApiDeleteOperation()
 	public async delete(
 			@Param(PARAM.UUID, ParseIntPipe) id: string,
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 	): Promise<void> {
 		return super.delete(id, userUuid);
 	}
 	
 	@ApiBulkDeleteOperation()
 	async bulkDelete(
-			@Headers(HEADER.USER_ID) userUuid: string,
+			@Headers(HEADER.USER_UUID) userUuid: string,
 			@Headers(HEADER.PARAMS) params: WhereParam<Post>[],
 	): Promise<void> {
 		return super.bulkDelete(userUuid, params);
