@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: payment
+  
+  config:
+    import: vault://
+  
+  cloud:
+    vault:
+      uri: ${VAULT_URL}
+      authentication: token
+      token: ${VAULT_TOKEN}
+      kv:
+        enabled: true
+        backend: webbicho
+        application-name: payment
+        default-context: webbicho/payment
+  
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  
+  jpa:
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+
+server:
+  port: 3401
