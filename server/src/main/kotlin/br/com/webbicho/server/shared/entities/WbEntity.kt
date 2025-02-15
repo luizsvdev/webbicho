@@ -1,5 +1,6 @@
 package br.com.webbicho.server.shared.entities
 
+import br.com.webbicho.server.shared.annotations.WbGeneratedUUID
 import jakarta.persistence.*
 import java.time.Instant
 import java.util.*
@@ -7,8 +8,7 @@ import java.util.*
 @MappedSuperclass
 abstract class WbEntity(
 	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
-	
+	@WbGeneratedUUID
 	var uuid: UUID? = null,
 	
 	/** @author Luiz Silva
