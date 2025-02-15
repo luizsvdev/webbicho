@@ -6,7 +6,7 @@
                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd"
 		objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
 	<!-- Creating Users Table -->
-	<changeSet id="1739586004736-1"
+	<changeSet id="1739636643888-1"
 						 author="Luiz Silva">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -22,9 +22,7 @@
 										 primaryKeyName="pk_users"/>
 			</column>
 			<column name="created_by"
-							type="UUID">
-				<constraints nullable="false"/>
-			</column>
+							type="UUID"/>
 			<column name="updated_by"
 							type="UUID"/>
 			<column name="created_at"
@@ -40,7 +38,7 @@
 				<constraints nullable="false"/>
 			</column>
 			<column name="exibition_name"
-							type="VARCHAR(255)">
+							type="VARCHAR(60)">
 				<constraints nullable="false"/>
 			</column>
 			<column name="email"
@@ -57,23 +55,13 @@
 							type="TEXT"/>
 		</createTable>
 		
-		<addUniqueConstraint columnNames="username"
-												 constraintName="uc_users_username"
-												 tableName="users"/>
 		<addUniqueConstraint columnNames="email"
 												 constraintName="uc_users_email"
 												 tableName="users"/>
 		
-		<addForeignKeyConstraint baseTableName="users"
-														 baseColumnNames="created_by"
-														 constraintName="fk_users_created_by"
-														 referencedTableName="users"
-														 referencedColumnNames="uuid"/>
-		<addForeignKeyConstraint baseTableName="users"
-														 baseColumnNames="updated_by"
-														 constraintName="fk_users_updated_by"
-														 referencedTableName="users"
-														 referencedColumnNames="uuid"/>
+		<addUniqueConstraint columnNames="username"
+												 constraintName="uc_users_username"
+												 tableName="users"/>
 		
 		<createIndex indexName="idx_user"
 								 tableName="users">
@@ -81,10 +69,22 @@
 			<column name="email"/>
 			<column name="role"/>
 		</createIndex>
+		
+		<addForeignKeyConstraint baseColumnNames="updated_by"
+														 baseTableName="users"
+														 constraintName="FK_USERS_ON_UPDATED_BY"
+														 referencedColumnNames="uuid"
+														 referencedTableName="users"/>
+		
+		<addForeignKeyConstraint baseColumnNames="created_by"
+														 baseTableName="users"
+														 constraintName="FK_USERS_ON_CREATED_BY"
+														 referencedColumnNames="uuid"
+														 referencedTableName="users"/>
 	</changeSet>
 	
 	<!-- Creating Posts Table -->
-	<changeSet id="1739586004736-2"
+	<changeSet id="1739636643888-2"
 						 author="Luiz Silva">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -100,9 +100,7 @@
 										 primaryKeyName="pk_posts"/>
 			</column>
 			<column name="created_by"
-							type="UUID">
-				<constraints nullable="false"/>
-			</column>
+							type="UUID"/>
 			<column name="updated_by"
 							type="UUID"/>
 			<column name="created_at"
@@ -117,34 +115,34 @@
 							type="TEXT">
 				<constraints nullable="false"/>
 			</column>
-			<column name="file"
-							type="TEXT"/>
 			<column name="user_uuid"
 							type="UUID">
 				<constraints nullable="false"/>
 			</column>
 		</createTable>
 		
+		<addForeignKeyConstraint baseColumnNames="created_by"
+														 baseTableName="posts"
+														 constraintName="FK_POSTS_ON_CREATED_BY"
+														 referencedColumnNames="uuid"
+														 referencedTableName="users"/>
+		
+		<addForeignKeyConstraint baseColumnNames="updated_by"
+														 baseTableName="posts"
+														 constraintName="FK_POSTS_ON_UPDATED_BY"
+														 referencedColumnNames="uuid"
+														 referencedTableName="users"/>
+		
 		<addForeignKeyConstraint baseColumnNames="user_uuid"
 														 baseTableName="posts"
 														 constraintName="FK_POSTS_ON_USER_UUID"
 														 referencedColumnNames="uuid"
-														 referencedTableName="users"/>
-		
-		<addForeignKeyConstraint baseTableName="posts"
-														 baseColumnNames="created_by"
-														 constraintName="fk_posts_created_by"
 														 referencedTableName="users"
-														 referencedColumnNames="uuid"/>
-		<addForeignKeyConstraint baseTableName="posts"
-														 baseColumnNames="updated_by"
-														 constraintName="fk_posts_updated_by"
-														 referencedTableName="users"
-														 referencedColumnNames="uuid"/>
+														 onDelete="CASCADE"/>
 	</changeSet>
 	
-	<!-- Creating Comments Table -->
-	<changeSet id="1739586004736-3"
+	<!-- Creating Comments Table-->
+	<changeSet id="1739636643888-3"
 						 author="Luiz Silva">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -160,9 +158,7 @@
 										 primaryKeyName="pk_comments"/>
 			</column>
 			<column name="created_by"
-							type="UUID">
-				<constraints nullable="false"/>
-			</column>
+							type="UUID"/>
 			<column name="updated_by"
 							type="UUID"/>
 			<column name="created_at"
@@ -182,31 +178,48 @@
 				<constraints nullable="false"/>
 			</column>
 			<column name="post_uuid"
-							type="UUID">
-				<constraints nullable="false"/>
-			</column>
+							type="UUID"/>
+			<column name="parent_uuid"
+							type="UUID"/>
 		</createTable>
+		
+		<sql>
+			ALTER TABLE comments
+				ADD CONSTRAINT CK_COMMENTS_PARENT_OR_POST_UUID
+					CHECK (COALESCE(post_uuid, parent_uuid) IS NOT NULL);
+		</sql>
+		
+		<addForeignKeyConstraint baseColumnNames="created_by"
+														 baseTableName="comments"
+														 constraintName="FK_COMMENTS_ON_CREATED_BY"
+														 referencedColumnNames="uuid"
+														 referencedTableName="users"/>
+		
+		<addForeignKeyConstraint baseColumnNames="updated_by"
+														 baseTableName="comments"
+														 constraintName="FK_COMMENTS_ON_UPDATED_BY"
+														 referencedColumnNames="uuid"
+														 referencedTableName="users"/>
 		
 		<addForeignKeyConstraint baseColumnNames="user_uuid"
 														 baseTableName="comments"
 														 constraintName="FK_COMMENTS_ON_USER_UUID"
 														 referencedColumnNames="uuid"
+														 onDelete="CASCADE"
 														 referencedTableName="users"/>
+		
 		<addForeignKeyConstraint baseColumnNames="post_uuid"
 														 baseTableName="comments"
 														 constraintName="FK_COMMENTS_ON_POST_UUID"
 														 referencedColumnNames="uuid"
+														 onDelete="CASCADE"
 														 referencedTableName="posts"/>
 		
-		<addForeignKeyConstraint baseTableName="comments"
-														 baseColumnNames="created_by"
-														 constraintName="fk_comments_created_by"
-														 referencedTableName="users"
-														 referencedColumnNames="uuid"/>
-		<addForeignKeyConstraint baseTableName="comments"
-														 baseColumnNames="updated_by"
-														 constraintName="fk_comments_updated_by"
-														 referencedTableName="users"
-														 referencedColumnNames="uuid"/>
+		<addForeignKeyConstraint baseColumnNames="parent_uuid"
+														 baseTableName="comments"
+														 constraintName="FK_COMMENTS_ON_PARENT_UUID"
+														 referencedColumnNames="uuid"
+														 onDelete="CASCADE"
+														 referencedTableName="comments"/>
 	</changeSet>
 </databaseChangeLog>

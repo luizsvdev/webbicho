@@ -17,7 +17,7 @@ class User(
 	)
 	var username: String? = null,
 	
-	@Column(nullable = false)
+	@Column(nullable = false, length = 60)
 	var exibitionName: String? = null,
 	
 	@Column(
@@ -25,7 +25,7 @@ class User(
 		unique = true,
 		length = 320
 	)
-	var email: String? = null,
+	val email: String? = null,
 	
 	@Column(columnDefinition = "TEXT", nullable = true)
 	var about: String? = null,
