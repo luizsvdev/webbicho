@@ -1,9 +1,9 @@
 package br.com.webbicho.server.shared.annotations
 
 import br.com.webbicho.server.shared.classes.WbUUIDGenerator
-import org.hibernate.annotations.ValueGenerationType
+import org.hibernate.annotations.IdGeneratorType
 
-@ValueGenerationType(generatedBy = WbUUIDGenerator::class)
+@IdGeneratorType(value = WbUUIDGenerator::class)
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD)
 annotation class WbGeneratedUUID
