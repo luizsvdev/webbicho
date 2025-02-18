@@ -11,8 +11,6 @@ abstract class WbEntity(
 	@WbGeneratedUUID
 	var uuid: UUID? = null,
 	
-	/** @author Luiz Silva
-	 * The foreign key for this field needs to be set manually throught changelog  */
 	@Column(
 		name = "created_by",
 		updatable = false,
@@ -33,8 +31,6 @@ abstract class WbEntity(
 		insertable = false,
 		nullable = true
 	)
-	/** @author Luiz Silva
-	 * The foreign key for this field needs to be set manually throught changelog  */
 	var updatedBy: UUID? = null,
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(
