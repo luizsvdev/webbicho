@@ -1,7 +1,7 @@
 spring:
   application:
     name: server
-    
+  
   config:
     import: vault://
   
@@ -33,6 +33,13 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+  
+  graphql:
+    graphiql:
+      enabled: true
+  
+  profiles:
+    active: dev
 
 server:
   port: ${APP_PORT}
